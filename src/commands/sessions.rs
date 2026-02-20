@@ -53,12 +53,18 @@ pub fn finalize_session(
     let current = state.current_user_id.lock().unwrap();
     let user_id = current.ok_or("Not authenticated")?;
 
+    println!("FINALIZE called");
+    println!("user_id: {}", user_id);
+    println!("session_id: {}", session_id);
+
     session_service::finalize_session(
         user_id,
         session_id,
         description,
         tags,
     )?;
+
+    println!("FINALIZE SUCCESS");
 
     Ok(())
 }

@@ -3,6 +3,7 @@ use serde::Serialize;
 #[derive(Debug)]
 pub struct DbProject {
     pub id: i64,
+    #[allow(dead_code)]
     pub user_id: i64,
     pub name: String,
     pub color: String,

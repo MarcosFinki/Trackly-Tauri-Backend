@@ -5,6 +5,7 @@ use serde::Serialize;
 =========================== */
 
 #[derive(Debug)]
+#[allow(dead_code)] // Suppress warnings for unused fields
 pub struct DbSession {
     pub id: i64,
     pub user_id: i64,

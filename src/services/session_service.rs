@@ -110,6 +110,12 @@ pub fn finalize_session(
         return Err("Invalid session state".into());
     }
 
+    println!(
+        "SESSION DB -> owner: {}, status: {}",
+        session.user_id,
+        session.status
+    );
+
     let now = Utc::now().to_rfc3339();
 
     let tx = conn.transaction().map_err(|e| e.to_string())?;
@@ -139,6 +145,12 @@ pub fn finalize_session(
         .map_err(|e| e.to_string())?;
     }
 
+    println!(
+        "SESSION DB -> owner: {}, status: {}",
+        session.user_id,
+        session.status
+    );
+
     tx.commit().map_err(|e| e.to_string())?;
 
     Ok(())
@@ -152,13 +164,11 @@ pub fn cancel_session(user_id: i64) -> Result<(), String> {
     let db = get_db();
     let conn = db.lock().unwrap();
 
-    let session = get_session_by_id(&conn, user_id)?;
-
     conn.execute(
         "UPDATE sessions
          SET status = 'cancelled'
-         WHERE id = ?1",
-        params![session.id],
+         WHERE user_id = ?1 AND status = 'running'",
+        params![user_id],
     )
     .map_err(|e| e.to_string())?;
 
